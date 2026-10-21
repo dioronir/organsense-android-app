@@ -1,0 +1,42 @@
+name: Gerar App Play Store (.AAB e .APK) - OrganSense
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar Codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gerar Keystore de Assinatura Oficial para Google Play
+        run: |
+          keytool -genkeypair -v -keystore app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass organsense2026 -keypass organsense2026 -dname "CN=OrganSense, OU=MedTech, O=OrganSense, L=Recife, ST=PE, C=BR"
+
+      - name: Compilar APK (Instalacao Direta) e AAB (Google Play Store)
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+      - run: |
+          gradle assembleRelease bundleRelease
+
+      - name: Disponibilizar Arquivos para Download (.AAB e .APK)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pacote-Oficial-PlayStore-OrganSense
+          path: |
+            app/build/outputs/bundle/release/*.aab
+            app/build/outputs/apk/release/*.apk
+            app/upload-keystore.jks
