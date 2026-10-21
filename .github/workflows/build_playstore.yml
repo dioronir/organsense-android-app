@@ -1,4 +1,4 @@
-name: Gerar App Play Store (.AAB e .APK) - OrganSense
+name: Gerar App Play Store (.AAB e .APK) - Homeostas.IA
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Gerar Keystore de Assinatura Oficial para Google Play
         run: |
-          keytool -genkeypair -v -keystore app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass organsense2026 -keypass organsense2026 -dname "CN=OrganSense, OU=MedTech, O=OrganSense, L=Recife, ST=PE, C=BR"
+          keytool -genkeypair -v -keystore app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass organsense2026 -keypass organsense2026 -dname "CN=Homeostas.IA, OU=MedTech, O=Homeostas.IA, L=Recife, ST=PE, C=BR"
 
       - name: Configurar Gradle 8.7 e Compilar APK + AAB
         uses: gradle/actions/setup-gradle@v4
@@ -38,7 +38,7 @@ jobs:
       - name: Disponibilizar Arquivos para Download (.AAB e .APK)
         uses: actions/upload-artifact@v4
         with:
-          name: Pacote-Oficial-PlayStore-OrganSense
+          name: Pacote-Oficial-PlayStore-OrganSense-Homeostas.IA
           path: |
             app/build/outputs/bundle/release/*.aab
             app/build/outputs/apk/release/*.apk
